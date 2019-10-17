@@ -1,26 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import HotelsApi from './services/HotelsApi';
+
+import Header from './components/Header';
+import HotelCard from './components/HotelCard';
+
+import './App.scss';
+
+class App extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      fetching: true,
+      hotels: [],
+    }
+  }
+
+  componentDidMount() {
+    HotelsApi.getHotels().then(hotels => this.setState({ hotels, fetching: false }));
+
+    console.log(this.state.hotels);
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <Header hotels={this.state.hotels} />
+        <section className="section">
+          <div className="container">
+            <div className="columns is-multiline">
+              { this.state.hotels.map(hotel => <HotelCard {...hotel} />)}
+            </div>
+          </div>
+        </section>
+      </div>
+    )
+  }
 }
 
 export default App;
